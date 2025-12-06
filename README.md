@@ -100,7 +100,7 @@ npm run dev
 
 - **Respuesta ejemplo:**
 
-````json
+```json
 {
     "id": "U10MAsSwDaTHzINGjAkT",
     "name": "producto 1",
@@ -111,3 +111,10 @@ npm run dev
     ]
 }
 ```
+
+### Eliminar un producto
+- **DELETE** `/products/:id`
+- **Descripcion:** Elimina un producto por su ID.
+- **Parametros:**
+  - `id` (path, requerido): ID del producto a eliminar
+  - **Respuesta:** 204 No Content
