@@ -55,3 +55,14 @@ export const createProduct = async (req, res) => {
  
  res.status(201).json(product);
 };
+
+export const deleteProduct = await (req, res) => {
+  const { id } = req.params;
+
+  const deleted = await Model.deleteProduct(id);
+
+  if (!deleted) {
+    return res.status(404).json({ error: "Producto no encontrado" });
+  }
+  res.status(204).send();
+};
