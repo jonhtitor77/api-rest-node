@@ -1,3 +1,4 @@
+import e from "express";
 import * as Model from "../models/Product.js";
 
 export const getAllProducts = async (req, res) => {
@@ -45,4 +46,12 @@ const product = await Model.getProductById(id);
     res.status(404).json({ error: "No existe el producto" });
   }
   res.json(product);
+};
+
+export const createProduct = async (req, res) => {
+  const{name, price, categories} = req.body;
+  
+ const product = await Model.createProduct({name, price, categories});
+ 
+ res.status(201).json(product);
 };
