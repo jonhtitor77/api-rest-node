@@ -1,6 +1,6 @@
 import { db } from "./firebase.js";
 
-import {collection, getDocs, doc, getDoc, addDoc, deleteDoc, setDoc, updateDoc } from "firebase/firestore";
+import {collection, getDocs, doc, getDoc, addDoc, deleteDoc, setDoc, updateDoc, query, where } from "firebase/firestore";
 
 const productsCollection = collection(db, "product");
 
@@ -24,6 +24,17 @@ return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
   }
 };
 
+export const getProductsByCategory = async (category) => {
+try {
+  const q = query(productsCollection, where("categories", "array-contains", category));
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  
+} catch (error) {
+  console.error(error);
+}
+}
 export const createProduct = async (data) => {
   try {
     const docRef = await addDoc(productsCollection, data);
