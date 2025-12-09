@@ -11,21 +11,22 @@ export const getAllProducts = async (req, res) => {
     // console.log(productsByCategory.length);
     return  res.json(productsByCategory);
     
-      }
+      }else{
       const products = await Model.getAllProducts();
 
     res.json(products);
+  }
       
 };
 
-export const searchProducts = (req, res) => {
+export const searchProducts = async (req, res) => {
   const { name } = req.query;
 
   if (!name) {
    return res.status(404).json({ error: 'El nombre se requiere'});
   }
 
-    const products = Model.getAllProducts();
+    const products = await Model.getAllProducts();
 
   const productosFiltrados = products.filter((item) => item.name.toLowerCase().includes(name.toLowerCase())
 );

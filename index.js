@@ -9,10 +9,10 @@ app.get('/', (req, res) => {
   res.json({ message: "Bienvenido a nuestra API REST!" });
 });
 
-import authRouter from './src/routes/auth.router.js';
+import authRouter from './src/routes/auth.routes.js';
 app.use("/api/auth", authRouter);
 
-import productsRouter from './src/routes/products.router.js';
+import productsRouter from './src/routes/products.routes.js';
 app.use(productsRouter);
 
 
