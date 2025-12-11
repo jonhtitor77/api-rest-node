@@ -100,12 +100,15 @@ npm run dev
 
 ## Respuestas Posibles:
 
-- **201 Created: Registro exitoso.** Devuelve el ID y el email del usuario.
+- **201 Created: Registro exitoso.** Devuelve mensaje y el email del usuario creado.
 
 ```json
 {
-  "id": "ID_DEL_USUARIO_FIREBASE",
-  "email": "nuevo.usuario@ejemplo.com"
+ {
+  "message": "Acaba de registrase ya puede iniciar sesion con el mail:",
+  "email": "aa@f.com",
+  "message2": "y su contraseña"
+}
 }
 ```
 - **400 Bad Request:** Si falta el email o password.
