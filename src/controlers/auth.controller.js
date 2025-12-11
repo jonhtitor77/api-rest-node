@@ -6,7 +6,7 @@ export const register = async (req, res) => {
     const {email, password} = req.body;
 
     if(!email || !password){
-        return res.status(422).json({message: "Email  y contraseña son requeridos"});
+        return res.status(400).json({message: "Email  y contraseña son requeridos"});
     }
 
     const existingUser = await findUserByEmail(email);
@@ -31,7 +31,7 @@ export const login = async (req, res) => {
      const {email, password} = req.body;
 
     if(!email || !password){
-        return res.status(422).json({message: "Email  y contraseña son requeridos"});
+        return res.status(400).json({message: "Email  y contraseña son requeridos"});
     }
 
     const user = await findUserByEmail(email);

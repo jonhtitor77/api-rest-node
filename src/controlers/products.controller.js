@@ -1,23 +1,51 @@
 import e, { response } from "express";
-import * as Model from "../models/Product.js";
-
-export const getAllProducts = async (req, res) => {
-  const { category } = req.query;
+// import * as Model from "../models/Product.js";
+import * as productsServices from "../services/products.services.js";
+// export const getAllProducts = async (req, res) => {
+//   const { category } = req.query;
 
   
 
-  if (category) {
-    const productsByCategory = await Model.getProductsByCategory(category);
-    // console.log(productsByCategory.length);
-    return  res.json(productsByCategory);
+//   if (category) {
+//     const productsByCategory = await Model.getProductsByCategory(category);
+//     // console.log(productsByCategory.length);
+//     return  res.json(productsByCategory);
     
-      }else{
-      const products = await Model.getAllProducts();
+//       }else{
+//       const products = await Model.getAllProducts();
 
-    res.json(products);
-  }
+//     res.json(products);
+//   }
       
+// };
+
+
+export const getAllProducts = async (req, res) => {
+  const { category } = req.query;
+ const products = await productsServices.getProducts(category);
+ res.json(products);
 };
+
+
+
+// export const searchProducts = async (req, res) => {
+//   const { name } = req.query;
+
+//   if (!name) {
+//    return res.status(404).json({ error: 'El nombre se requiere'});
+//   }
+
+//     const products = await Model.getAllProducts();
+
+//   const productosFiltrados = products.filter((item) => item.name.toLowerCase().includes(name.toLowerCase())
+// );
+
+// if(productosFiltrados.length == 0) {
+//   return res.status(404).json({ error: 'No se encontraron productos'});
+// }
+
+// res.json(productosFiltrados);
+// };
 
 export const searchProducts = async (req, res) => {
   const { name } = req.query;
@@ -26,10 +54,8 @@ export const searchProducts = async (req, res) => {
    return res.status(404).json({ error: 'El nombre se requiere'});
   }
 
-    const products = await Model.getAllProducts();
-
-  const productosFiltrados = products.filter((item) => item.name.toLowerCase().includes(name.toLowerCase())
-);
+    const productosFiltrados = await productsServices.searchProductsByName(name);
+  
 
 if(productosFiltrados.length == 0) {
   return res.status(404).json({ error: 'No se encontraron productos'});
@@ -38,10 +64,29 @@ if(productosFiltrados.length == 0) {
 res.json(productosFiltrados);
 };
 
+
+
+
+
+
+// export const getProductById = async (req, res) => {
+//   const id = req.params.id;
+
+// const product = await Model.getProductById(id);
+
+//   if (!product) {
+//     res.status(404).json({ error: "No existe el producto" });
+//   }
+//   res.json(product);
+// };
+
+
+
+
 export const getProductById = async (req, res) => {
   const id = req.params.id;
 
-const product = await Model.getProductById(id);
+const product = await productsServices.getProductDetails(id);
 
   if (!product) {
     res.status(404).json({ error: "No existe el producto" });
@@ -49,13 +94,48 @@ const product = await Model.getProductById(id);
   res.json(product);
 };
 
+// export const createProduct = async (req, res) => {
+//   const{name, price, categories} = req.body;
+  
+//  const product = await Model.createProduct({name, price, categories});
+ 
+//  res.status(201).json(product);
+// };
+
+
+
+
+
 export const createProduct = async (req, res) => {
   const{name, price, categories} = req.body;
   
- const product = await Model.createProduct({name, price, categories});
+ const product = await productsServices.createNewProduct({name, price, categories});
  
  res.status(201).json(product);
 };
+
+
+
+
+
+
+
+// export const updateProduct = async (req, res) => {
+//   const { id } = req.params;
+//   const { name, price, categories } = req.body; 
+
+//   if (!name || !price || !categories) {
+//     return res.status(422).json({ error: "Nombre, precio y categorias son requeridos" });
+//   }
+// const updated = await Model.updateProduct(id, { name, price, categories });
+
+//   if (!updated) {
+//     return res.status(404).json({ error: "Producto no encontrado" });
+//   }
+
+//   res.json(updated);
+// };
+
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
@@ -64,7 +144,7 @@ export const updateProduct = async (req, res) => {
   if (!name || !price || !categories) {
     return res.status(422).json({ error: "Nombre, precio y categorias son requeridos" });
   }
-const updated = await Model.updateProduct(id, { name, price, categories });
+const updated = await productsServices.updateProductDetails(id, { name, price, categories });
 
   if (!updated) {
     return res.status(404).json({ error: "Producto no encontrado" });
@@ -72,20 +152,41 @@ const updated = await Model.updateProduct(id, { name, price, categories });
 
   res.json(updated);
 };
+
+
+
+
+
+// export const updatePatchProduct = async (req, res) => {
+//   const { id } = req.params;
+ 
+//   const data = {}
+//   if (req.body.name) data.name = req.body.name;
+//   if (req.body.price) data.price = req.body.price;
+//   if (req.body.categories) data.categories = req.body.categories;
+
+//   if (Object.keys(data).length === 0) {
+//     return res.status(422).json({ error: "No se encontraron campos para poder actualizar" });
+//   }
+// const updated = await Model.updatePatchProduct(id, data);
+
+//   if (!updated) {
+//     return res.status(404).json({ error: "Producto no encontrado" });
+//   }
+
+//   res.json(updated);
+// };
+
 
 
 export const updatePatchProduct = async (req, res) => {
   const { id } = req.params;
  
-  const data = {}
-  if (req.body.name) data.name = req.body.name;
-  if (req.body.price) data.price = req.body.price;
-  if (req.body.categories) data.categories = req.body.categories;
-
-  if (Object.keys(data).length === 0) {
+  
+const updated = await productsServices.updatePartialProductDetails(id, req.body);
+if (updated === null) {
     return res.status(422).json({ error: "No se encontraron campos para poder actualizar" });
   }
-const updated = await Model.updatePatchProduct(id, data);
 
   if (!updated) {
     return res.status(404).json({ error: "Producto no encontrado" });
@@ -94,10 +195,25 @@ const updated = await Model.updatePatchProduct(id, data);
   res.json(updated);
 };
 
+
+// export const deleteProduct = async (req, res) => {
+//   const { id } = req.params;
+
+//   const deleted = await Model.deleteProduct(id);
+
+//   if (!deleted) {
+//     return res.status(404).json({ error: "Producto no encontrado" });
+//   }
+//   res.status(204).send();
+// };
+
+
+
+
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
-  const deleted = await Model.deleteProduct(id);
+  const deleted = await productsServices.removeProduct(id);
 
   if (!deleted) {
     return res.status(404).json({ error: "Producto no encontrado" });
