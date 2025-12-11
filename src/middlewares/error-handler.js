@@ -7,6 +7,6 @@ const statusCode = err.status || 500;
 
 const mensage = statusCode === 500 ? 'Error interno del servidor' : err.message;
 
-res.status(statusCode).json({ message: mensage });
+res.status(statusCode).json({ error: mensage });
 };
 
