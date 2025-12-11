@@ -23,7 +23,7 @@ export const register = async (req, res) => {
     if(!user){
         return res.sendStatus(503);
     }
-    res.status(201).json({ id: user.id, email: user.email });
+    res.status(201).json({ message:"Acaba de registrase ya puede iniciar sesion con el mail:", email: user.email, message2: "y su contraseña" });
 
 };
 
