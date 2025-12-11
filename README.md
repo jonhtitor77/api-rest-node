@@ -85,6 +85,92 @@ npm run dev
 }
 ```
 
+
+  ### Registrarse (se necesitara para modificar la base de datos si no esta logueado)
+- **POST** `/api/auth/register`
+- **Descripcion:** se crea un usuario nuevo en la base de datos para poder loguearse luego.
+- **Body (JSON):** debe incluir mail y password.
+```json
+{
+    "email":"jonatan@gmail.com",
+    "password": "1234"
+}
+
+```
+
+## Respuestas Posibles:
+
+- **201 Created: Registro exitoso.** Devuelve el ID y el email del usuario.
+
+```json
+{
+  "id": "ID_DEL_USUARIO_FIREBASE",
+  "email": "nuevo.usuario@ejemplo.com"
+}
+```
+- **400 Bad Request:** Si falta el email o password.
+
+
+```json
+{
+  "message": "Email  y contraseña son requeridos"
+}
+```
+
+- **409 Conflict:** Si el email ya está registrado.
+
+
+```json
+{
+  "message": "El usuario ya existe"
+}
+```
+
+### INICIAR SESION (obtendremos el token si queremos modificar algo en la base de datos)
+- **POST** `/api/auth/login`
+- **Descripcion:** Autentica un usuario existente y devuelve un JSON Web Token (JWT) para ser usado en futuras peticiones protegidas.
+- **Body (JSON):** debe incluir mail y password.
+```json
+{
+    "email":"jonatan@gmail.com",
+    "password": "1234"
+}
+
+```
+
+## Respuestas Posibles:
+
+- **200 OK:** Inicio de sesión exitoso. Devuelve un JWT que expira en 1 hora.
+
+```json
+{
+  {
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IklEX1VTVUFSSU8iLCJlbWFpbCI6InVzdWFyaW8uZXhpc3RlbnRlQGVqZW1wbG8uY29tIiwiaWF0IjoxNjcyNTc1NDMwLCJleHAiOjE2NzI1NzkxNjB9.S0m3Y0UrU0Q6Q0m4d0V5Q4m5y0D8v3P9z0"
+}
+}
+```
+- **400 Bad Request:** Si falta el email o password.
+
+
+```json
+{
+  "message": "Email  y contraseña son requeridos"
+}
+```
+
+- **401 Unauthorized:** Si el email no existe o la password es incorrecta.
+
+
+```json
+{
+  "message": "Credenciales invalidas"
+}
+```
+
+
+
+
+
 ### Crear un producto
 
 - **POST** `/api/products`
@@ -167,8 +253,9 @@ npm run dev
 
 
 ### Eliminar un producto
-- **DELETE** `/api/id/products/:id`
+- **DELETE** `/api/products/:id`
 - **Descripcion:** Elimina un producto por su ID.
 - **Parametros:**
   - `id` (path, requerido): ID del producto a eliminar
   - **Respuesta:** 204 No Content
+
